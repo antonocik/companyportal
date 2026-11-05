@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../store/AppStore'
 import {
@@ -26,6 +26,9 @@ export default function Profile() {
   const navigate = useNavigate()
 
   const user = currentUser!
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [photoError, setPhotoError] = useState<string | null>(null)
 
   const [profileForm, setProfileForm] = useState({
     name: user.name,
@@ -84,6 +87,38 @@ export default function Profile() {
     notify('Profil berhasil diperbarui.')
   }
 
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setPhotoError(null)
+    if (!file.type.startsWith('image/')) {
+      setPhotoError('File harus berupa gambar (JPG, PNG, atau WebP).')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setPhotoError('Ukuran foto maksimal 2 MB.')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : ''
+      if (!result) {
+        setPhotoError('Gagal membaca file foto.')
+        return
+      }
+      updateProfile({ avatar: result })
+      notify('Foto profil berhasil diperbarui.')
+    }
+    reader.onerror = () => setPhotoError('Gagal membaca file foto.')
+    reader.readAsDataURL(file)
+    event.target.value = ''
+  }
+
+  const handleRemovePhoto = () => {
+    updateProfile({ avatar: undefined })
+    notify('Foto profil dihapus.', 'info')
+  }
+
   const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!passwordForm.current) {
@@ -136,12 +171,51 @@ export default function Profile() {
           <div className="card border-0 shadow-sm overflow-hidden mb-3">
             <div className="profile-cover" />
             <div className="card-body text-center pt-0">
-              <Avatar
-                name={user.name}
-                size={92}
-                presence={user.presence}
-                className="profile-avatar mx-auto"
+              <div className="position-relative d-inline-block">
+                <Avatar
+                  name={user.name}
+                  size={92}
+                  presence={user.presence}
+                  className="profile-avatar mx-auto"
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary profile-photo-button"
+                  onClick={() => fileInputRef.current?.click()}
+                  aria-label="Ganti foto profil"
+                  title="Ganti foto profil"
+                >
+                  <i className="bi bi-camera-fill" aria-hidden="true" />
+                </button>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="d-none"
+                onChange={handlePhotoChange}
               />
+              {photoError ? (
+                <div className="alert alert-danger py-2 small mt-2 mb-0" role="alert">
+                  {photoError}
+                </div>
+              ) : null}
+              {user.avatar ? (
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    className="btn btn-link btn-sm p-0 text-danger"
+                    onClick={handleRemovePhoto}
+                  >
+                    <i className="bi bi-trash me-1" aria-hidden="true" />
+                    Hapus foto
+                  </button>
+                </div>
+              ) : (
+                <p className="small text-secondary mt-2 mb-0">
+                  Belum ada foto. Klik ikon kamera untuk mengunggah (maks. 2 MB).
+                </p>
+              )}
               <h2 className="h4 mt-3 mb-1">{user.name}</h2>
               <div className="text-secondary">{user.position}</div>
               <div className="d-flex justify-content-center flex-wrap gap-2 mt-2">

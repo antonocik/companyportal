@@ -81,7 +81,7 @@ interface AppContextValue {
   login: (email: string, password: string) => LoginResult
   logout: () => void
   resetDemoData: () => void
-  updateProfile: (patch: Pick<User, 'name' | 'phone' | 'location'>) => void
+  updateProfile: (patch: Partial<Pick<User, 'name' | 'phone' | 'location' | 'avatar'>>) => void
   changePassword: (currentPassword: string, nextPassword: string) => MutationResult
   addUser: (input: NewUserInput) => MutationResult
   updateUser: (id: string, patch: Partial<User>) => MutationResult
@@ -176,7 +176,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateProfile = useCallback(
-    (patch: Pick<User, 'name' | 'phone' | 'location'>) => {
+    (patch: Partial<Pick<User, 'name' | 'phone' | 'location' | 'avatar'>>) => {
       if (!sessionUserId) return
       setDb((previous) => ({
         ...previous,

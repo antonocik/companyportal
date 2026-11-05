@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
+import { useApp } from '../store/AppStore'
 import { avatarGradient, classNames, initials } from '../lib/utils'
 import type { Tone } from '../lib/labels'
 import type { Presence } from '../types'
@@ -19,12 +20,16 @@ export function Avatar({
   size = 40,
   presence,
   className,
+  src,
 }: {
   name: string
   size?: number
   presence?: Presence
   className?: string
+  src?: string
 }) {
+  const { db } = useApp()
+  const image = src ?? db.users.find((item) => item.name === name)?.avatar
   const dotSize = Math.max(8, Math.round(size * 0.24))
   return (
     <span
@@ -33,11 +38,20 @@ export function Avatar({
         width: size,
         height: size,
         fontSize: Math.round(size * 0.36),
-        background: avatarGradient(name),
+        background: image ? 'transparent' : avatarGradient(name),
+        overflow: 'hidden',
       }}
       aria-hidden="true"
     >
-      {initials(name)}
+      {image ? (
+        <img
+          src={image}
+          alt={name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      ) : (
+        initials(name)
+      )}
       {presence ? (
         <span
           className={`presence-dot presence-${presence}`}

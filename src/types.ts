@@ -25,6 +25,7 @@ export interface User {
   active: boolean
   presence: Presence
   leaveQuota: number
+  avatar?: string
 }
 
 export type AnnouncementCategory = 'Umum' | 'HR' | 'IT' | 'Kegiatan'
