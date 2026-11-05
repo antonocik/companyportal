@@ -1,5 +1,7 @@
 # Nusantara Portal — Company Portal
 
+![Dashboard Nusantara Portal](docs/dashboard.png)
+
 Aplikasi **portal perusahaan internal** yang dibangun dengan **React + Vite + TypeScript** dan antarmuka **AdminLTE 4** (Bootstrap 5.3). Seluruh data bersifat demo dan disimpan di `localStorage` browser, sehingga setiap mutasi bertahan antar sesi tanpa backend.
 
 ## Fitur
