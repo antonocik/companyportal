@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../store/AppStore'
 import { Badge, Modal, useToast } from '../components/ui'
+import { useT } from '../lib/i18n'
 
 export default function Login() {
   const { login, currentUser } = useApp()
   const notify = useToast()
+  const t = useT()
   const navigate = useNavigate()
 
   const [email, setEmail] = useState(() => localStorage.getItem('nusantara-remember-email') ?? '')
@@ -142,11 +144,11 @@ export default function Login() {
               <div className="mb-4">
                 <Badge tone="primary" className="mb-3">
                   <i className="bi bi-shield-lock me-1" aria-hidden="true" />
-                  Portal internal karyawan
+                  {t('Portal internal karyawan')}
                 </Badge>
-                <h2 className="fw-bold mb-2">Masuk ke akun Anda</h2>
+                <h2 className="fw-bold mb-2">{t('Masuk ke akun Anda')}</h2>
                 <p className="text-secondary mb-0">
-                  Gunakan email perusahaan untuk mengakses layanan internal.
+                  {t('Gunakan email perusahaan untuk mengakses layanan internal.')}
                 </p>
               </div>
 
@@ -160,7 +162,7 @@ export default function Login() {
               <form onSubmit={handleSubmit} noValidate>
                 <div className="mb-3">
                   <label htmlFor="login-email" className="form-label">
-                    Email perusahaan
+                    {t('Email perusahaan')}
                   </label>
                   <div className="input-group auth-input-group">
                     <span className="input-group-text">
@@ -182,14 +184,14 @@ export default function Login() {
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center">
                     <label htmlFor="login-password" className="form-label">
-                      Kata sandi
+                      {t('Kata sandi')}
                     </label>
                     <button
                       type="button"
                       className="btn btn-link btn-sm p-0 auth-link"
                       onClick={() => setShowHelp(true)}
                     >
-                      Lupa kata sandi?
+                      {t('Lupa kata sandi?')}
                     </button>
                   </div>
                   <div className="input-group auth-input-group">
@@ -200,7 +202,7 @@ export default function Login() {
                       id="login-password"
                       type={showPassword ? 'text' : 'password'}
                       className="form-control"
-                      placeholder="Masukkan kata sandi"
+                      placeholder={t('Masukkan kata sandi')}
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                       autoComplete="current-password"
@@ -230,17 +232,17 @@ export default function Login() {
                       onChange={(event) => setRemember(event.target.checked)}
                     />
                     <label className="form-check-label small" htmlFor="login-remember">
-                      Ingat email saya
+                      {t('Ingat email saya')}
                     </label>
                   </div>
                   <span className="small text-secondary">
                     <i className="bi bi-lock-fill me-1" aria-hidden="true" />
-                    Koneksi aman
+                    {t('Koneksi aman')}
                   </span>
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-lg w-100 auth-submit">
-                  Masuk ke portal
+                  {t('Masuk ke portal')}
                   <i className="bi bi-arrow-right ms-2" aria-hidden="true" />
                 </button>
               </form>
@@ -248,10 +250,10 @@ export default function Login() {
               <div className="auth-form-footer">
                 <span>
                   <i className="bi bi-question-circle me-1" aria-hidden="true" />
-                  Butuh bantuan akses?
+                  {t('Butuh bantuan akses?')}
                 </span>
                 <button type="button" className="btn btn-link btn-sm p-0 auth-link" onClick={() => setShowHelp(true)}>
-                  Hubungi IT Support
+                  {t('Hubungi IT Support')}
                 </button>
               </div>
             </div>

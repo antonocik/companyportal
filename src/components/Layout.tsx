@@ -4,6 +4,7 @@ import { useApp } from '../store/AppStore'
 import { Avatar, Badge, Dropdown, useToast } from './ui'
 import { roleLabel, roleTone } from '../lib/labels'
 import { classNames, dateISO, formatDate, timeAgo } from '../lib/utils'
+import { useT } from '../lib/i18n'
 
 interface NavItem {
   to: string
@@ -234,6 +235,8 @@ export default function Layout() {
   }, [mobileOpen])
 
   const user = currentUser
+  const t = useT()
+  const { language, setLanguage } = useApp()
   const unreadAnnouncements = user
     ? db.announcements.filter((announcement) => !announcement.readBy.includes(user.id))
     : []
@@ -401,11 +404,11 @@ export default function Layout() {
 
             <li className="nav-item">
               <Dropdown
-                label="Aksi cepat"
+                label={t('Aksi cepat')}
                 trigger={
                   <>
                     <i className="bi bi-plus-circle" aria-hidden="true" />
-                    <span className="d-none d-sm-inline ms-1">Baru</span>
+                    <span className="d-none d-sm-inline ms-1">{t('Baru')}</span>
                   </>
                 }
                 menuClassName="dropdown-menu-sm shadow"
@@ -451,8 +454,23 @@ export default function Layout() {
             </li>
 
             <li className="nav-item">
+              <button
+                type="button"
+                className="nav-link btn btn-link"
+                onClick={() => setLanguage(language === 'id' ? 'en' : 'id')}
+                aria-label={t('Bahasa')}
+                title={t('Bahasa')}
+              >
+                <i className="bi bi-translate me-1" aria-hidden="true" />
+                <span className="d-none d-sm-inline small fw-semibold">
+                  {language === 'id' ? 'ID' : 'EN'}
+                </span>
+              </button>
+            </li>
+
+            <li className="nav-item">
               <Dropdown
-                label={`Notifikasi: ${notificationCount} belum dibaca`}
+                label={`${t('Notifikasi')}: ${notificationCount} ${t('belum dibaca')}`}
                 trigger={
                   <>
                     <i className="bi bi-bell" aria-hidden="true" />
@@ -601,7 +619,7 @@ export default function Layout() {
             <ul className="nav sidebar-menu flex-column" role="list">
               {navSections.map((section) => (
                 <li key={section.title} className="nav-section">
-                  <div className="nav-header">{section.title}</div>
+                  <div className="nav-header">{t(section.title)}</div>
                   {section.items.map((item) => (
                     <div key={item.to} className="nav-item">
                       <NavLink
@@ -613,7 +631,7 @@ export default function Layout() {
                       >
                         <i className={`nav-icon bi ${item.icon}`} aria-hidden="true" />
                         <p className="mb-0">
-                          {item.label}
+                          {t(item.label)}
                           {item.badge ? (
                             <span
                               className={`nav-badge badge rounded-pill text-bg-${item.badgeTone ?? 'secondary'}`}

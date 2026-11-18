@@ -11,6 +11,8 @@ export type Department =
 
 export type Presence = 'online' | 'sibuk' | 'offline'
 
+export type Language = 'id' | 'en'
+
 export interface User {
   id: string
   name: string

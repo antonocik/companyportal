@@ -25,6 +25,7 @@ import type {
   TicketStatus,
   User,
   WorkMode,
+  Language,
 } from '../types'
 import { createSeedDb } from '../data/seed'
 import { dateISO, timeNow, uid, workingDays } from '../lib/utils'
@@ -78,6 +79,8 @@ interface AppContextValue {
   db: Db
   currentUser: User | null
   isAdmin: boolean
+  language: Language
+  setLanguage: (language: Language) => void
   login: (email: string, password: string) => LoginResult
   logout: () => void
   resetDemoData: () => void
@@ -133,6 +136,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [sessionUserId, setSessionUserId] = useState<string | null>(() =>
     localStorage.getItem(SESSION_KEY),
   )
+  const [language, setLanguageState] = useState<Language>(() =>
+    localStorage.getItem('nusantara-language') === 'en' ? 'en' : 'id',
+  )
 
   useEffect(() => {
     localStorage.setItem(DB_KEY, JSON.stringify(db))
@@ -142,6 +148,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (sessionUserId) localStorage.setItem(SESSION_KEY, sessionUserId)
     else localStorage.removeItem(SESSION_KEY)
   }, [sessionUserId])
+
+  useEffect(() => {
+    localStorage.setItem('nusantara-language', language)
+  }, [language])
 
   const currentUser = useMemo(
     () => db.users.find((user) => user.id === sessionUserId) ?? null,
@@ -519,11 +529,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [sessionUserId],
   )
 
+  const setLanguage = useCallback((lang: Language) => setLanguageState(lang), [])
+
   const value = useMemo<AppContextValue>(
     () => ({
       db,
       currentUser,
       isAdmin: currentUser?.role === 'admin',
+      language,
+      setLanguage,
       login,
       logout,
       resetDemoData,
@@ -576,6 +590,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       createTicket,
       updateTicket,
       addTicketComment,
+      language,
+      setLanguage,
     ],
   )
 

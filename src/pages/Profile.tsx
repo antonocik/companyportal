@@ -11,6 +11,7 @@ import {
 } from '../components/ui'
 import { roleLabel, roleTone } from '../lib/labels'
 import { formatDate, sum } from '../lib/utils'
+import { useT } from '../lib/i18n'
 
 export default function Profile() {
   const {
@@ -24,6 +25,7 @@ export default function Profile() {
   } = useApp()
   const notify = useToast()
   const navigate = useNavigate()
+  const t = useT()
 
   const user = currentUser!
 
@@ -149,8 +151,8 @@ export default function Profile() {
 
   return (
     <Page
-      title="Profil Saya"
-      subtitle="Kelola informasi pribadi, keamanan akun, dan preferensi portal"
+      title={t('Profil Saya')}
+      subtitle={t('Kelola informasi pribadi, keamanan akun, dan preferensi portal')}
       actions={
         <button
           type="button"

@@ -21,6 +21,7 @@ import {
   sum,
   timeAgo,
 } from '../lib/utils'
+import { useT } from '../lib/i18n'
 import type { WorkMode } from '../types'
 
 const workModes: WorkMode[] = ['WFO', 'WFH', 'Dinas']
@@ -30,6 +31,7 @@ export default function Dashboard() {
     useApp()
   const notify = useToast()
   const navigate = useNavigate()
+  const t = useT()
 
   const [now, setNow] = useState(() => new Date())
   const [workMode, setWorkMode] = useState<WorkMode>('WFO')
@@ -159,7 +161,7 @@ export default function Dashboard() {
           </div>
           <div className="flex-grow-1 min-w-0">
             <h2 className="h4 mb-1">
-              {greeting()}, {firstName} <span aria-hidden="true">👋</span>
+              {t(greeting())}, {firstName} <span aria-hidden="true">👋</span>
             </h2>
             <p className="text-secondary mb-1">
               {isAdmin
@@ -285,8 +287,8 @@ export default function Dashboard() {
           <div className="card border-0 shadow-sm h-100">
             <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
               <div>
-                <h3 className="card-title mb-0">Kehadiran 7 Hari Kerja</h3>
-                <div className="small text-secondary">Persentase karyawan hadir per hari</div>
+                <h3 className="card-title mb-0">{t('Kehadiran 7 Hari Kerja')}</h3>
+                <div className="small text-secondary">{t('Persentase karyawan hadir per hari')}</div>
               </div>
               <Badge tone={averageAttendance >= 85 ? 'success' : 'warning'}>
                 Rata-rata {averageAttendance}%
